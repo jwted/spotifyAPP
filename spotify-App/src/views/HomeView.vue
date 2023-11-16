@@ -1,5 +1,5 @@
 <script>
-import dashboard from '../components/dashboard.vue';
+import dashboard from '../components/Dashboard.vue';
 
 
 export default {
@@ -14,7 +14,6 @@ export default {
 
 <template>
   <main>
-    <h1>ola</h1>
     <dashboard/>
   </main>
 </template>

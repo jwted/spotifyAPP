@@ -7,9 +7,11 @@ data() {
   return {
     token:"",
     userData:{},
+    topArtists:{},
+    topTracks:{},
     CLIENT_ID:"648fdde9ee8d43df83b827613921ea7e" ,
     CLIENT_SECRET:"21d216171a434a829cd378d951ac5e38",
-    REDIRECT_URL_LOGIN:"http://localhost:5173/home/",
+    REDIRECT_URL_LOGIN:"http://localhost:5173/home",
     REDIRECT_URL_LOGIN_ENCODED:"http%3A%2F%2Flocalhost%3A5173%2Fhome%2F",
   }
 },  
@@ -18,100 +20,65 @@ data() {
 
 methods: {
     
-    
-    async getToken(code){
-
-
-        
-         const grant = {
-            grant_type: "authorization_code",
-            code,
-            redirect_uri:this.REDIRECT_URL_LOGIN, // required for verification, but no actual redirect
-        };
-
-        const tokenRequest = fetch("https://accounts.spotify.com/api/token", {
-            method: "POST",
-            body: new URLSearchParams(Object.entries(grant)).toString(),
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                'Authorization': 'Basic '  + 'NjQ4ZmRkZTllZThkNDNkZjgzYjgyNzYxMzkyMWVhN2U6MjFkMjE2MTcxYTQzNGE4MjljZDM3OGQ5NTFhYzVlMzg='
-            },
-        });
-
-        tokenRequest.then(response => response.json()).then(async (answer) => {
-            if (answer.error) {
-               console.log(answer.error)
-               console.log(answer)
-            } 
-
-            localStorage.setItem("accessToken", answer.access_token);
-            localStorage.setItem("refresh-token", answer.refresh_token);
-            await this.refreshAccessToken(); // because first access token is apperantly invalid
-            ;
-        });
-
-        await tokenRequest; 
-    },
-
-    async refreshAccessToken(){
-        const access_token = window.location.hash.split('&')[0].split('=')[1]
-        const refreshToken = localStorage.getItem("refresh-token");
-    if (refreshToken === null) {
-        return;
-    }
-    const code =Buffer.from(this.CLIENT_ID + ':' + this.CLIENT_SECRET).toString('base64')
-    const grant = {
-        grant_type: "refresh_token",
-        refresh_token: refreshToken,
-        code:'BQAoob9RyS6cDzmXqmuS6rcWhQ82tQ0-KBcqSlJ7u4DEaCE6kRAVVrRNC3hbAzRZx1NRfssNFn_ZJnwzg5SaZBRQ1xwewXSFoRkOPvsZQDv_rYwKGteJUIS5eL-4RoLv4HOCh0emaOl4Xg-Ll4Dkw5E1KORQciu1hrfvff-169KdAQbupuIEO0ZkE--AzZgXjjN6Jqk',
-        client_id: this.CLIENT_ID,
-        client_secret: this.CLIENT_SECRET,
-        redirect_uri:"http://localhost:5173/home/"
-
-    };
-    const tokenRequest = fetch("https://accounts.spotify.com/api/token", {
-        method: "POST",
-        body: new URLSearchParams(grant),
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            'Authorization': 'Basic ' + 'NjQ4ZmRkZTllZThkNDNkZjgzYjgyNzYxMzkyMWVhN2U6MjFkMjE2MTcxYTQzNGE4MjljZDM3OGQ5NTFhYzVlMzg='
-        },
-    });
-
-    tokenRequest.then(response => response.json()).then(async (answer) => {
-
-        localStorage.setItem("accessToken", answer.access_token);
-        localStorage.setItem("refresh-token", answer.refresh_token);
-        setTimeout(() => this.refreshAccessToken(), (answer.expires_in - 100) * 1000);
-    });
-    /* tokenRequest.catch(async (error) => {
-        localStorage.removeItem("auth-token");
-        localStorage.removeItem("refresh-token");
-        console.warn("access Token refresh failed (network error): " + error);
-        await navigateTo("/login");
-    }); */
-
-    await tokenRequest;
-    }
-
-
-
-
-    
-    
-    
-    
-    
-    
-    
-    
    
     
+    async getToken(code){
+        
+            const verifier = localStorage.getItem("verifier") 
+             const data={
+                    'code': code,
+                    'redirect_uri': 'http://localhost:5173/home',
+                    'grant_type': 'authorization_code',
+                    'code_verifier':verifier
+                }
+             await axios.post("https://accounts.spotify.com/api/token", data,
+                {headers:{
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Basic ' + (new Buffer.from(this.CLIENT_ID + ':' + this.CLIENT_SECRET).toString('base64'))
+                }}
+                )
+                .then((response) => this.token=(response.data.access_token))
+                .catch((err) => console.log(err));
+                
+            
+            await axios.get("https://api.spotify.com/v1/me",{headers:{
+                'Authorization': 'Bearer ' + this.token
+            }})
+                .then((response) => this.userData=response.data)
+                .catch((err) => console.log(err));
+
+            
+            
+            await axios.get("https://api.spotify.com/v1/me/top/artists",{headers:{
+                'Authorization': 'Bearer ' + this.token
+            }})
+                .then((response) => this.topArtists=(response.data.items))
+                .catch((err) => console.log(err));
+            this.topArtists = this.topArtists.slice(0,11)
+            await axios.get("https://api.spotify.com/v1/me/top/tracks",{headers:{
+                'Authorization': 'Bearer ' + this.token
+            }})
+            .then((response) => this.topTracks=(response.data.items))
+            .catch((err) => console.log(err));
+            this.topTracks = this.topTracks.slice(0,11)
+            
+        
+        }, 
+        
+        
+        
     },
     
     mounted () {
-        const code = window.location.hash.split('&')[0].split('=')[1]
-        this.getToken(code)
+        
+        const urlObject = new URL(window.location);
+        const code = urlObject.searchParams.get('code');
+        
+        setInterval(this.getToken(code),3600000)
+        /* this.getProfile(String(this.token)) */
+        
+        
+        
     }
 }
 
@@ -119,8 +86,21 @@ methods: {
 </script>
 
 <template>
-  <div>
-    
+    <div>
+        <h1 v-if="this.userData !={}">{{this.userData.display_name}}</h1>
+        
+        console.log(this.userData.images[0].url)
+        <br>
+    <h1>Top Artists</h1>
+    <br>
+    <div v-for="artist in this.topArtists">
+        {{ artist.name }} 
+    </div> 
+    <br>
+    <h1>Top Tracks</h1>  
+    <div v-for="track in this.topTracks">
+        {{ track.name }}
+    </div>    
   </div>
 </template>
 
