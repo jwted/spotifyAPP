@@ -80,15 +80,16 @@ methods: {
 
 
 }
-    
-    
-
 
 </script>
 
 <template>
   <div>
-    <button @click="login">LOGIN</button>
+    <button 
+    @click="login" 
+    style="color:#FFF;font-size: 18px;font-style: normal;font-weight: 500;">
+      Login
+    </button>
   </div>
 </template>
 
