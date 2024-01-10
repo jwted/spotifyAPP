@@ -1,5 +1,5 @@
 <script>
-/* import { userStore } from '../stores/counter' */
+import { useUserStore } from '../stores/userStore'
 
 export default{
 data() {
@@ -9,7 +9,8 @@ data() {
     REDIRECT_URL_LOGIN:"http://localhost:5173/home",
     REDIRECT_URL_LOGIN_ENCODED:"http%3A%2F%2Flocalhost%3A5173%2Fhome%2F",
     SCOPES:["user-read-currently-playing", "user-read-playback-state","user-read-private","user-read-email"], /// o que se quer obter do user
-    SCOPES_PARAMS: ""
+    SCOPES_PARAMS: "",
+    userStore:useUserStore()
   }
 },  
 
@@ -44,10 +45,10 @@ methods: {
   },
   
   async login() {
-   
-    const verifier = this.generateCodeVerifier(128);
-    const challenge = await this.generateCodeChallange(verifier);
 
+     const verifier = this.generateCodeVerifier(128);
+     const challenge = await this.generateCodeChallange(verifier);
+     
     localStorage.setItem("verifier", verifier);
 
     const params = new URLSearchParams();
@@ -57,11 +58,9 @@ methods: {
     params.append("scope", "user-read-private user-read-email user-top-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
-
     window.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
-   
-   
-   
+  
+    
    /*  this.SCOPES_PARAMS = this.SCOPES.join("%20")
     window.location = `${this.AUTH_ENDPOINT}?client_id=${this.CLIENT_ID}&redirect_uri=${this.REDIRECT_URL_LOGIN}&scope=${this.SCOPES_PARAMS}&response_type=token`
    */},
@@ -85,10 +84,15 @@ methods: {
 
 <template>
   <div>
-    <button 
+    <button v-if="!userStore.isLogged"
     @click="login" 
     style="color:#FFF;font-size: 18px;font-style: normal;font-weight: 500;">
       Login
+    </button>
+    <button v-if="userStore.isLogged"
+    @click="login" 
+    style="color:#FFF;font-size: 18px;font-style: normal;font-weight: 500;">
+      Dashboard
     </button>
   </div>
 </template>

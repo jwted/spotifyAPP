@@ -1,13 +1,24 @@
 <script>
 import dashboard from '../components/Dashboard.vue';
 import NavBar from "../components/NavBar.vue"
-
+import {useUserStore} from '../stores/userStore'
 
 export default {
   components: {
   dashboard,
   NavBar,
-}}
+},
+data() {
+    return {
+        userStore: useUserStore()
+    }
+},
+
+mounted(){
+    console.log(this.userStore.getTopArtists)
+}
+
+}
 
 
 
@@ -19,7 +30,6 @@ export default {
     <div style="display: flex;">
 
       <NavBar/>
-      <dashboard/>
     </div>
   </main>
 </template>

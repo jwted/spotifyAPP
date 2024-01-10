@@ -1,20 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LandingView from '../views/LandingView.vue'
-import LoginView from '../views/LoginView.vue'
-
+import QuizzView from '../views/QuizzView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+
     {
-      path: '/',
-      name: 'landing',
-      component: LandingView
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: LoginView
+      path: '/quizz',
+      name: 'quizz',
+      component: QuizzView
     },
     {
       path: '/home',
