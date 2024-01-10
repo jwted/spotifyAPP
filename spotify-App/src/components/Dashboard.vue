@@ -1,18 +1,12 @@
 <script>
 import axios from "axios"
 import { Buffer } from 'buffer'
-
+import {useUserStore} from '../stores/userStore'
 export default{
 data() {
   return {
-    token:"",
-    userData:{},
-    topArtists:{},
-    topTracks:{},
-    CLIENT_ID:"648fdde9ee8d43df83b827613921ea7e" ,
-    CLIENT_SECRET:"21d216171a434a829cd378d951ac5e38",
-    REDIRECT_URL_LOGIN:"http://localhost:5173/home",
-    REDIRECT_URL_LOGIN_ENCODED:"http%3A%2F%2Flocalhost%3A5173%2Fhome%2F",
+    userStore:useUserStore(),
+    
   }
 },  
 
@@ -22,7 +16,7 @@ methods: {
     
    
     
-    async getToken(code){
+    /* async getToken(code){
         
             const verifier = localStorage.getItem("verifier") 
              const data={
@@ -66,7 +60,12 @@ methods: {
         }, 
         
         
-        
+       */ 
+    }, 
+
+    created () {
+        console.log('first')
+        this.userStore.isLogged = true
     },
     
     mounted () {
@@ -74,10 +73,9 @@ methods: {
         const urlObject = new URL(window.location);
         const code = urlObject.searchParams.get('code');
         
-        setInterval(this.getToken(code),3600000)
+        setInterval(this.userStore.getUserInfo(code),3600000)
         /* this.getProfile(String(this.token)) */
-        
-        
+        console.log(this.userStore.isLogged)
         
     }
 }
@@ -113,7 +111,7 @@ methods: {
         <div v-for="track in this.topTracks">
             {{ track.name }}
     </div>    
-  </div>
+  </div> -->
 </template>
 
 <style>

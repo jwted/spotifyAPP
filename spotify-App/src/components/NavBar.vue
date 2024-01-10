@@ -14,6 +14,18 @@
           </v-list>
           
           <v-divider></v-divider>
+            
+            <div  v-if="userStore.isLogged && userStore.userData.images && userStore.userData.images.length > 0">>
+              <v-list style="display: flex;">
+                <v-list-item>
+                  <img class="profilePic" :src="this.userStore.userData.images[0].url"> 
+                </v-list-item>
+                <v-list-item>
+                  <h1 class="navText">{{this.userStore.userData.display_name}}</h1> 
+                </v-list-item>
+              </v-list>
+            </div>
+            
           
           <v-list density="compact" nav>
             <!-- <v-list-item
@@ -21,9 +33,27 @@
               title="User"
               style="color:#FFF;font-size: 24px;font-style: normal;font-weight: 500;"
             ></v-list-item> -->
-            <v-list-item value="login">
+            
+            <!-- <v-list-item>
+              <img src={{ this.userData. }}>
+            </v-list-item>
+             -->
+            <v-list-item>
               <v-list-item-action style="justify-content: center;">
                 <Login/>
+                <p style="color:">{{userStore.isLogged}}</p>
+              </v-list-item-action>
+            </v-list-item>
+            
+            <v-list-item v-if="userStore.isLogged">
+              <v-list-item-action style="justify-content: center;">
+                <Button class="navText"  @click="this.$router.push('/quizz')">Quizz</Button>
+              </v-list-item-action>
+            </v-list-item>
+            
+            <v-list-item v-if="userStore.isLogged">
+              <v-list-item-action style="justify-content: center;">
+                <Button id="navLogout"  @click="redirectAndLogout">Logout</Button>
               </v-list-item-action>
             </v-list-item>
             
@@ -38,13 +68,44 @@
 
 <script>
   import Login from "./Login.vue"
+  import {useUserStore} from "../stores/userStore"
   export default {
+    
+    data() {
+      return {
+        userStore: useUserStore(),
+      }
+    },
     components: {
       Login,
+    },
+
+    methods: {
+      
+      redirectAndLogout(){
+        useUserStore().logout()
+        this.$router.push('/')
+      }
     },
   }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+.profilePic{
+  border-radius: 50%;
+}
+.navText{
+  color:#FFF;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+}
+#navLogout{
+  color:#B71C1C ;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+}
+
 
 </style>
