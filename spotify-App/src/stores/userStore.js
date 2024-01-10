@@ -48,7 +48,7 @@ export const useUserStore = defineStore('user', {
           }})
               .then((response) => this.TopArtists=(response.data.items))
               .catch((err) => console.log(err));
-          this.TopArtists = this.TopArtists.slice(0,11)
+          this.TopArtists = this.TopArtists.slice(0,10)
              
           
           await axios.get("https://api.spotify.com/v1/me/top/tracks",{headers:{
@@ -56,7 +56,7 @@ export const useUserStore = defineStore('user', {
           }})
               .then((response) => this.TopMusics=(response.data.items))
               .catch((err) => console.log(err));
-          this.TopMusics = this.TopMusics.slice(0,11)
+          this.TopMusics = this.TopMusics.slice(0,10)
 
     }  ,
     

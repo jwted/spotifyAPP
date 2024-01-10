@@ -87,12 +87,12 @@ methods: {
     <div styel>
         <v-container>
             <!-- User -->
-            <v-card>
-                <v-img :src="this.userData.images[0].url" style="width: 100px; height: 100px;"></v-img>
-                <v-title>{{this.userData.display_name}}</v-title>
+            <v-card v-if="userStore.isLogged && userStore.userData.images && userStore.userData.images.length > 0">
+                <v-img :src="this.userStore.userData.images[0].url" style="width: 100px; height: 100px;"></v-img>
+                <v-title>{{this.userStore.userData.display_name}}</v-title>
             </v-card>
             <h1>Top Artists</h1>
-            <v-row v-for="artist in this.topArtists" rows="4">
+            <v-row v-for="artist in this.userStore.topArtists" rows="4">
                 <v-col cols="4">
                     <v-card>
                         <v-cardtitle>{{ artist.name }}</v-cardtitle>
@@ -108,7 +108,7 @@ methods: {
         </v-container>
         
         <h1>Top Tracks</h1>  
-        <div v-for="track in this.topTracks">
+        <div v-for="track in this.userStore.topTracks">
             {{ track.name }}
     </div>    
   </div> -->
