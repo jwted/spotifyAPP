@@ -45,9 +45,10 @@ methods: {
   },
   
   async login() {
+      if(!this.userStore.isLogged){
 
-     const verifier = this.generateCodeVerifier(128);
-     const challenge = await this.generateCodeChallange(verifier);
+        const verifier = this.generateCodeVerifier(128);
+        const challenge = await this.generateCodeChallange(verifier);
      
     localStorage.setItem("verifier", verifier);
 
@@ -59,7 +60,10 @@ methods: {
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
     window.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
-  
+    
+  }else{
+    this.$router.push('/home')
+  }
     
    /*  this.SCOPES_PARAMS = this.SCOPES.join("%20")
     window.location = `${this.AUTH_ENDPOINT}?client_id=${this.CLIENT_ID}&redirect_uri=${this.REDIRECT_URL_LOGIN}&scope=${this.SCOPES_PARAMS}&response_type=token`

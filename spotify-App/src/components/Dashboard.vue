@@ -84,15 +84,34 @@ methods: {
 </script>
 
 <template>
-    <v-app>
-        <v-card>
-            <v-layout>
+    <div styel>
+        <v-container>
+            <!-- User -->
+            <v-card v-if="userStore.isLogged && userStore.userData.images && userStore.userData.images.length > 0">
+                <v-img :src="this.userStore.userData.images[0].url" style="width: 100px; height: 100px;"></v-img>
+                <v-title>{{this.userStore.userData.display_name}}</v-title>
+            </v-card>
+            <h1>Top Artists</h1>
+            <v-row v-for="artist in this.userStore.topArtists" rows="4">
+                <v-col cols="4">
+                    <v-card>
+                        <v-cardtitle>{{ artist.name }}</v-cardtitle>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-container>
 
-                
-                
-        </v-layout>
-        </v-card>
-    </v-app>
+        
+        <!-- <h1 v-if="this.userData !={}">{{this.userData.display_name}}</h1> -->
+        <!-- console.log(this.userData.images[0].url) -->
+        <v-container>
+        </v-container>
+        
+        <h1>Top Tracks</h1>  
+        <div v-for="track in this.userStore.topTracks">
+            {{ track.name }}
+    </div>    
+  </div> -->
 </template>
 
 <style>

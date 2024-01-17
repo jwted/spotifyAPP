@@ -14,7 +14,6 @@
           </v-list>
           
           <v-divider></v-divider>
-            
             <div  v-if="userStore.isLogged && userStore.userData.images && userStore.userData.images.length > 0">>
               <v-list style="display: flex;">
                 <v-list-item>

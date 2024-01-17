@@ -33,8 +33,8 @@ mounted(){
 <template>
   <main>
     <div style="display: flex;">
-
-      <NavBar/>
+        <NavBar/>
+        
     </div>
   </main>
 </template>
