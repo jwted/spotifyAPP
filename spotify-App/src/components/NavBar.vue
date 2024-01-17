@@ -3,7 +3,7 @@
     <v-card>
       <v-layout>
         <v-navigation-drawer
-          style="background-color: #191414;box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);"
+          style="background-color: #191414;box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);position: fixed;"
         >
           <v-list>
             <v-list-item>
@@ -60,7 +60,7 @@
           </v-list>
         </v-navigation-drawer>
   
-        <v-main style="height: 200vh"></v-main>
+        <v-main style="height: 200vh; width: 100px"></v-main>
       </v-layout>
     </v-card>
   </v-app>

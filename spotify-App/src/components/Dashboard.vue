@@ -1,70 +1,23 @@
 <script>
-import axios from "axios"
-import { Buffer } from 'buffer'
-import {useUserStore} from '../stores/userStore'
+import {useUserStore} from '../stores/userStore.js'
+import Chart from 'chart.js/auto';
+import GraphGenre from "@/components/GraphGenre.vue"
+
 export default{
-data() {
-  return {
-    userStore:useUserStore(),
-    
-  }
-},  
+    components: {
+        GraphGenre,
+    },
 
-
-
-methods: {
-    
-   
-    
-    /* async getToken(code){
-        
-            const verifier = localStorage.getItem("verifier") 
-             const data={
-                    'code': code,
-                    'redirect_uri': 'http://localhost:5173/home',
-                    'grant_type': 'authorization_code',
-                    'code_verifier':verifier
-                }
-             await axios.post("https://accounts.spotify.com/api/token", data,
-                {headers:{
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + (new Buffer.from(this.CLIENT_ID + ':' + this.CLIENT_SECRET).toString('base64'))
-                }}
-                )
-                .then((response) => this.token=(response.data.access_token))
-                .catch((err) => console.log(err));
-                
-            
-            await axios.get("https://api.spotify.com/v1/me",{headers:{
-                'Authorization': 'Bearer ' + this.token
-            }})
-                .then((response) => this.userData=response.data)
-                .catch((err) => console.log(err));
-
-            
-            
-            await axios.get("https://api.spotify.com/v1/me/top/artists",{headers:{
-                'Authorization': 'Bearer ' + this.token
-            }})
-                .then((response) => this.topArtists=(response.data.items))
-                .catch((err) => console.log(err));
-            this.topArtists = this.topArtists.slice(0,11)
-            await axios.get("https://api.spotify.com/v1/me/top/tracks",{headers:{
-                'Authorization': 'Bearer ' + this.token
-            }})
-            .then((response) => this.topTracks=(response.data.items))
-            .catch((err) => console.log(err));
-            this.topTracks = this.topTracks.slice(0,11)
-            
-        
-        }, 
-        
-        
-       */ 
-    }, 
+    data() {
+        return {
+            userStore:useUserStore(),
+            genresData: [],
+            chartInstance: null,
+        }
+    },  
 
     created () {
-        console.log('first')
+        /* console.log('first') */
         this.userStore.isLogged = true
     },
     
@@ -76,50 +29,118 @@ methods: {
         setInterval(this.userStore.getUserInfo(code),3600000)
         /* this.getProfile(String(this.token)) */
         console.log(this.userStore.isLogged)
-        
-    }
+
+        //Graph Genres
+        /* setTimeout(() => {
+            this.fetchTopGenres();
+        }, 0); */
+    },
+    methods: {
+        //Graph Genres
+        /* fetchTopGenres() {
+            const genres = this.userStore.TopArtists.map(item => item.genres).flat();
+
+            const genreCounts = genres.reduce((counts, genre) => {
+                counts[genre] = (counts[genre] || 0) + 1;
+                return counts;
+            }, {});
+
+            this.genresData = Object.entries(genreCounts).map(([label, value]) => ({
+                label,
+                value,
+            }));
+
+            const chartOptions = {
+                type: 'doughnut', // Change the chart type if needed
+                data: {
+                labels: this.genresData.map(data => data.label),
+                datasets: [
+                    {
+                    data: this.genresData.map(data => data.value),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                    ],
+                    },
+                ],
+                },
+                options: {
+                    responsive: false, 
+                    width: 200, 
+                    height: 200, 
+                },
+            };
+            this.chartInstance = new Chart(this.$refs.myChart, chartOptions);
+            }, */
+    },
 }
 
 
 </script>
 
 <template>
-    <div styel>
-        <v-container>
-            <!-- User -->
-            <v-card v-if="userStore.isLogged && userStore.userData.images && userStore.userData.images.length > 0">
-                <v-img :src="this.userStore.userData.images[0].url" style="width: 100px; height: 100px;"></v-img>
-                <v-title>{{this.userStore.userData.display_name}}</v-title>
-            </v-card>
-            <h1>Top Artists</h1>
-            <v-row v-for="artist in this.userStore.topArtists" rows="4">
-                <v-col cols="4">
-                    <v-card>
-                        <v-cardtitle>{{ artist.name }}</v-cardtitle>
-                    </v-card>
-                </v-col>
-            </v-row>
+    <v-container v-if="userStore.isLogged && userStore.userData.images && userStore.userData.images.length > 0">
+        <!-- User -->
+        <h1>My stats</h1><br>
+        <v-row>
+            <v-col style="width: 100px;">
+                <!-- Followers -->
+                <v-card style="width: 200px; height: 90px;">
+                    <v-card-title>Followers</v-card-title>
+                    <v-card-text style="font-size: small;">{{ this.userStore.userData.followers.total }}</v-card-text>
+                </v-card>
+            </v-col>
+            <v-col>
+                <!-- Language -->
+                <v-card style="width: 200px; height: 90px;">
+                    <v-card-title>Language</v-card-title>
+                    <v-card-text style="font-size: small;">{{ this.userStore.userData.country }}</v-card-text>
+                </v-card>
+            </v-col>
+            <v-col>
+                <!-- Total artits followed (tem de ser artista) -->
+                <!-- <v-card>
+                    <v-card-title>Total of followed artists</v-card-title>
+                    <v-card-text>{{ this.userStore.userDataFollowing.items[0].followers[0].total }}</v-card-text>
+                </v-card> -->
+            </v-col>
+        </v-row><br>
+        <h2>Top Artists</h2>
+        <v-row rows="6">
+            <v-col v-for="artist in this.userStore.TopArtists" cols="4">
+                <v-card style="width: 180px;height: 200px;">
+                    <v-img :src=artist.images[0].url style="width: 200px;height: 150px;"></v-img>
+                    <v-card-title>{{ artist.name }}</v-card-title>
+                    <!-- <v-card-text style="font-size: small;">{{ artist.genres }}</v-card-text> -->
+                </v-card>
+            </v-col>
+        </v-row><br>
+        <h2>Top Music</h2>
+        <v-row rows="6">
+            <v-col v-for="music in this.userStore.TopMusics" cols="4">
+                <v-card style="width: 300px; height: 270px;">
+                    <!-- <v-img :src=music.images.url style="width: 200px;height: 150px;"></v-img> -->
+                    <v-card-title style="font-size: medium;">{{ music.name }}</v-card-title>
+                    <v-card-text style="font-size: small;">Artist : {{ music.artists[0].name }}</v-card-text>
+                    <v-card-text style="font-size: small;">Popularity : {{ music.popularity }}</v-card-text>
+                    <v-card-text style="font-size: small;">Duration : {{ music.duration_ms }}ms</v-card-text>
+                    <a :href="music.uri" style="padding: 10px;">
+                        <v-btn elevation="2" outlined>LISTEN</v-btn>
+                    </a>
+                </v-card>
+            </v-col>
+        </v-row><br>
+        <h3>Top Genres</h3>
+        <v-container v-if="userStore.isLogged && userStore.userData.images && userStore.userData.images.length > 0">
+            <GraphGenre/>
         </v-container>
-
-        
-        <!-- <h1 v-if="this.userData !={}">{{this.userData.display_name}}</h1> -->
-        <!-- console.log(this.userData.images[0].url) -->
-        <v-container>
-        </v-container>
-        
-        <h1>Top Tracks</h1>  
-        <div v-for="track in this.userStore.topTracks">
-            {{ track.name }}
-    </div>    
-  </div> -->
+        <!-- <canvas ref="myChart"></canvas><br> -->
+    </v-container>
 </template>
 
 <style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
+
 </style>

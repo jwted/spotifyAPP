@@ -1,21 +1,23 @@
 <script>
-import dashboard from '../components/Dashboard.vue';
-import NavBar from "../components/NavBar.vue"
-
+import dashboard from '@/components/Dashboard.vue';
+import NavBar from "@/components/NavBar.vue"
+import GraphGenre from '@/components/GraphGenre.vue';
 
 export default {
   components: {
   dashboard,
   NavBar,
+  GraphGenre
 }}
 </script>
 
 <template>
-  <main>
-    <div style="display: flex;">
-
-      <NavBar/>
-      <dashboard/>
-    </div>
-  </main>
+  <v-app>
+    <v-card>
+      <v-layout>
+        <NavBar/>
+        <dashboard/>
+      </v-layout>
+    </v-card>
+  </v-app>
 </template>

@@ -19,54 +19,62 @@ export const useUserStore = defineStore('user', {
     getTopMusics:(state) => state.TopMusics,
   },
   actions: {
-    async getUserInfo(code){
-      const verifier = localStorage.getItem("verifier") 
-             const data={
-                    'code': code,
-                    'redirect_uri': 'http://localhost:5173/home',
-                    'grant_type': 'authorization_code',
-                    'code_verifier':verifier
-                }
-             await axios.post("https://accounts.spotify.com/api/token", data,
-                {headers:{
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + (new Buffer.from(this.CLIENT_ID + ':' + this.CLIENT_SECRET).toString('base64'))
-                }}
-                )
-                .then((response) => this.token=(response.data.access_token))
-                .catch((err) => console.log(err));
-                
-            
-            await axios.get("https://api.spotify.com/v1/me",{headers:{
-                'Authorization': 'Bearer ' + this.token
-            }})
-                .then((response) => this.userData=response.data, console.log(this.userData))
-                .catch((err) => console.log(err));
-                
-              await axios.get("https://api.spotify.com/v1/me/top/artists",{headers:{
-              'Authorization': 'Bearer ' + this.token
-          }})
-              .then((response) => this.TopArtists=(response.data.items))
-              .catch((err) => console.log(err));
-          this.TopArtists = this.TopArtists.slice(0,10)
-             
-          
-          await axios.get("https://api.spotify.com/v1/me/top/tracks",{headers:{
-              'Authorization': 'Bearer ' + this.token
-          }})
-              .then((response) => this.TopMusics=(response.data.items))
-              .catch((err) => console.log(err));
-          this.TopMusics = this.TopMusics.slice(0,10)
+      async getUserInfo(code) {
+        const verifier = localStorage.getItem("verifier")
+        const data = {
+          'code': code,
+          'redirect_uri': 'http://localhost:5173/home',
+          'grant_type': 'authorization_code',
+          'code_verifier': verifier
+        }
 
-    }  ,
-    
-    
-    logout(){
-      this.$reset()
-      console.log('sai fdp')
-    }
-  },  
-  methods: {
-    
-  },
-});
+        //Token
+        await axios.post("https://accounts.spotify.com/api/token", data, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Authorization': 'Basic ' + (new Buffer.from(this.CLIENT_ID + ':' + this.CLIENT_SECRET).toString('base64'))
+            }
+          })
+          .then((response) => this.token = (response.data.access_token))
+          .catch((err) => console.log(err));
+
+        //User Data
+        await axios.get("https://api.spotify.com/v1/me", {
+            headers: {
+              'Authorization': 'Bearer ' + this.token
+            }
+          })
+          .then((response) => this.userData = response.data, console.log(this.userData))
+          .catch((err) => console.log(err));
+
+        //Top Artist Data
+        await axios.get("https://api.spotify.com/v1/me/top/artists", {
+            headers: {
+              'Authorization': 'Bearer ' + this.token
+            }
+          })
+          .then((response) => this.TopArtists = (response.data.items))
+          .catch((err) => console.log(err));
+        this.TopArtists = this.TopArtists.slice(0, 6)
+
+        //Top Music Data
+        await axios.get("https://api.spotify.com/v1/me/top/tracks", {
+            headers: {
+              'Authorization': 'Bearer ' + this.token
+            }
+          })
+          .then((response) => this.TopMusics = (response.data.items))
+          .catch((err) => console.log(err));
+        this.TopMusics = this.TopMusics.slice(0, 6)
+      },
+
+
+      logout() {
+        this.$reset()
+        console.log('sai fdp')
+      }
+    },
+    methods: {
+
+    },
+  });
