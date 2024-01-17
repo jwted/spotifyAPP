@@ -11,11 +11,10 @@ export default {
 </script>
 
 <template>
-  <main>
-    <div style="display: flex;">
-
+  <v-app>
+    <div>
       <NavBar/>
       <dashboard/>
     </div>
-  </main>
+  </v-app>
 </template>

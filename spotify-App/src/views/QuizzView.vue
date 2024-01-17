@@ -15,7 +15,12 @@ data() {
 },
 
 mounted(){
-    console.log(this.userStore.getTopArtists)
+    const artistsId = this.userStore.getTopArtists
+    artistsId.forEach(artist => {
+        artist=artist.id
+        console.log(artist)
+    });
+
 }
 
 }

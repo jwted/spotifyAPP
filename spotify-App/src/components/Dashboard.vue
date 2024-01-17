@@ -84,42 +84,23 @@ methods: {
 </script>
 
 <template>
-    <div styel>
-        <v-container>
-            <!-- User -->
-            <v-card>
-                <v-img :src="this.userData.images[0].url" style="width: 100px; height: 100px;"></v-img>
-                <v-title>{{this.userData.display_name}}</v-title>
-            </v-card>
-            <h1>Top Artists</h1>
-            <v-row v-for="artist in this.topArtists" rows="4">
-                <v-col cols="4">
-                    <v-card>
-                        <v-cardtitle>{{ artist.name }}</v-cardtitle>
-                    </v-card>
-                </v-col>
-            </v-row>
-        </v-container>
+    <v-app>
+        <v-card>
+            <v-layout>
 
-        
-        <!-- <h1 v-if="this.userData !={}">{{this.userData.display_name}}</h1> -->
-        <!-- console.log(this.userData.images[0].url) -->
-        <v-container>
-        </v-container>
-        
-        <h1>Top Tracks</h1>  
-        <div v-for="track in this.topTracks">
-            {{ track.name }}
-    </div>    
-  </div> -->
+                
+                
+        </v-layout>
+        </v-card>
+    </v-app>
 </template>
 
 <style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
+/* @media (min-width: 1024px) {
+    .about {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+    }
+} */
 </style>

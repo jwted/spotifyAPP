@@ -90,7 +90,7 @@ methods: {
       Login
     </button>
     <button v-if="userStore.isLogged"
-    @click="login" 
+    @click="this.$router.push('/home')" 
     style="color:#FFF;font-size: 18px;font-style: normal;font-weight: 500;">
       Dashboard
     </button>

@@ -79,7 +79,6 @@
     components: {
       Login,
     },
-
     methods: {
       
       redirectAndLogout(){
