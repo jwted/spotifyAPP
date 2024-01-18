@@ -16,10 +16,8 @@ data() {
 
 mounted () {
   
-   /* const {access_token,expires_in,token_type} = this.getParamsFromAUTH(window.location.hash)
-   localStorage.setItem("accessToken",access_token)
-   localStorage.setItem("expiresIN",expires_in)
- */},
+
+},
 
 
 
@@ -61,20 +59,9 @@ methods: {
     window.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
   
     
-   /*  this.SCOPES_PARAMS = this.SCOPES.join("%20")
-    window.location = `${this.AUTH_ENDPOINT}?client_id=${this.CLIENT_ID}&redirect_uri=${this.REDIRECT_URL_LOGIN}&scope=${this.SCOPES_PARAMS}&response_type=token`
-   */},
+   },
 
-  /* getParamsFromAUTH(hash){
-    const stringAfterHashtag = hash.substring(1)
-    const pararmsInUrl = stringAfterHashtag.split("&")
-    const paramsSplitUp = pararmsInUrl.reduce((accumulater,currentValue)=>{
-      const [key,value]= currentValue.split('=')
-      accumulater[key] = value
-      return accumulater
-    },{})
-    return paramsSplitUp
-  } */
+  
 },
 
 

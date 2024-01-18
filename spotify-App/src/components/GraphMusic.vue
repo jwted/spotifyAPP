@@ -30,17 +30,6 @@
   
     methods: {
         fetchMusicDetails() {
-           /*  const details = this.userStore.Music.map(item => item.graph).flat();
-    
-            const detailsCounts = details.reduce((counts, details) => {
-                counts[details] = (counts[details] || 0) + 1;
-                return details;
-            }, {});
-    
-            this.musicData = Object.entries(detailsCounts).map(([label, value]) => ({
-                label,
-                value,
-            })); */
 
             let acousticness = this.musicInfo.acousticness
             let danceability = this.musicInfo.danceability

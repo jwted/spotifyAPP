@@ -27,16 +27,10 @@ export default {
   },
 
   mounted () {  
-   /*  this.$nextTick(() => {
-      setTimeout(() => {
-    */     
    if(this.userStore.TopArtists.length > 0){
-    console.log('entra')
      this.fetchTopGenres();
     }
-      /* }, 0); */
   }, 
-/* },  */
   
   methods: {
      fetchTopGenres() {

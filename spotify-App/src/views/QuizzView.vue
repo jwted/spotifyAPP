@@ -7,7 +7,7 @@
           <div class="quiz-container">
             <div v-if="currentQuestionIndex < questions.length">
               <h2 class="question">{{ questions[currentQuestionIndex].question }}</h2>
-              <img :src="this.questions[currentQuestionIndex].image">
+              <img class="albumCover" :src="this.questions[currentQuestionIndex].image">
               <div v-for="(option, index) in questions[currentQuestionIndex].options" :key="index">
                 <button
                   @click="selectOption(index)"
@@ -63,33 +63,32 @@ export default {
       }
     },
     checkAnswer() {
-  if (this.selectedOption !== null) {
-    const selectedOptionContent = this.questions[this.currentQuestionIndex].options[this.selectedOption];
-    const correctAnswerContent = this.questions[this.currentQuestionIndex].correctAnswer;
+      if (this.selectedOption !== null) {
+        const selectedOptionContent = this.questions[this.currentQuestionIndex].options[this.selectedOption];
+        const correctAnswerContent = this.questions[this.currentQuestionIndex].correctAnswer;
 
-    if (selectedOptionContent === correctAnswerContent) {
-      this.score++;
-    }
+        if (selectedOptionContent === correctAnswerContent) {
+          this.score++;
+        }
 
-    this.selectedOption = null;
-    this.currentQuestionIndex++;
-    this.resetTimer();
-  } else {
-    alert("Please select an option before moving to the next question.");
-  }
-},
-shuffle(array) {
-    let currentIndex = array.length, randomIndex;
+        this.selectedOption = null;
+        this.currentQuestionIndex++;
+        this.resetTimer();
+      } else {
+      }
+    },
+    shuffle(array) {
+      let currentIndex = array.length, randomIndex;
 
-    while (currentIndex != 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
+      while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
 
-      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
 
-    return array;
-  },
+      return array;
+    },
     startTimer() {
       this.isTimeUp = false;
       this.timer = setInterval(() => {
@@ -113,53 +112,48 @@ shuffle(array) {
       this.isTimeUp = false;
       clearInterval(this.timer);
       this.fetchQuestions();
-      this.resetTimer()
+      this.resetTimer();
     },
     async fetchQuestions() {
-  let albums = [];
-  const artists = this.userStore.TopArtists;
+      let albums = [];
+      const artists = this.userStore.TopArtists;
 
-  while (this.questions.length < 5) {
-    const i = Math.floor(Math.random() * artists.length);
+      while (this.questions.length < 5) {
+        const i = Math.floor(Math.random() * artists.length);
 
-    await axios.get(`https://api.spotify.com/v1/artists/${artists[i].id}/albums?include_groups=album&offset=0&limit=5`, {
-      headers: {
-        'Authorization': 'Bearer ' + this.userStore.token
+        await axios.get(`https://api.spotify.com/v1/artists/${artists[i].id}/albums?include_groups=album&offset=0&limit=5`, {
+          headers: {
+            'Authorization': 'Bearer ' + this.userStore.token
+          }
+        }).then((response) => {
+          albums.push(response.data.items);
+        });
+
+        const x = Math.floor(Math.random() * albums.length)
+        const singularAlbum = albums[x][Math.floor(Math.random() * albums[0].length)];
+
+        if (!this.questions.some(question => question.image === singularAlbum.images[0].url)) {
+          let artistsNames = [singularAlbum.artists[0].name];
+          while (artistsNames.length < 4) {
+            const randomArtist = this.shuffle(artists).slice(0, 1)[0].name;
+            if (!artistsNames.includes(randomArtist)) {
+              artistsNames.push(randomArtist);
+            }
+          }
+
+          const shuffledOptions = this.shuffle(artistsNames);
+
+          this.questions.push({
+            question: 'Who made this album',
+            options: shuffledOptions,
+            correctAnswer: singularAlbum.artists[0].name,
+            image: singularAlbum.images[0].url
+          });
+        }
       }
-    }).then((response) => {
-      albums.push(response.data.items);
-    });
 
-    const x = Math.floor(Math.random() * albums.length)
-    const singularAlbum = albums[x][Math.floor(Math.random() * albums[0].length)];
-
-    // Check if there is no question with the same image
-    if (!this.questions.some(question => question.image === singularAlbum.images[0].url)) {
-      // Shuffle artists array and take the first four elements
-      let artistsNames = this.shuffle(artists).slice(0, 4);
-
-      // Generate options array
-      const optionsArr = [
-        singularAlbum.artists[0].name,
-        artistsNames[0].name,
-        artistsNames[1].name,
-        artistsNames[2].name
-      ];
-
-      // Shuffle the options array
-      const shuffledOptions = this.shuffle(optionsArr);
-
-      this.questions.push({
-        question: 'Who made this album',
-        options: shuffledOptions,
-        correctAnswer: singularAlbum.artists[0].name,
-        image: singularAlbum.images[0].url
-      });
-    }
-  }
-
-  this.startTimer();
-},
+      this.startTimer();
+    },
   },
   mounted() {
     this.fetchQuestions();
@@ -168,12 +162,11 @@ shuffle(array) {
     clearInterval(this.timer);
   },
 };
-</script>
+</script> 
 
 <style scoped>
 .quiz-container {
   text-align: center;
-  margin-top: 50px;
   background-color: #000; /* Black background */
   color: #fff; /* White font color */
   padding: 20px;
@@ -199,6 +192,9 @@ shuffle(array) {
   background-color: #76c391; /* Spotify Green */
   color: #fff;
   cursor: pointer;
+}
+.albumCover{
+  max-width: 400px;
 }
 
 .next-btn {

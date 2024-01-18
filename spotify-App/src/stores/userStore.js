@@ -46,7 +46,7 @@ export const useUserStore = defineStore('user', {
               'Authorization': 'Bearer ' + this.token
             }
           })
-          .then((response) => this.userData = response.data, console.log(this.userData))
+          .then((response) => this.userData = response.data)
           .catch((err) => console.log(err));
 
         //Top Artist Data
@@ -86,11 +86,7 @@ export const useUserStore = defineStore('user', {
               .then((response) => response.data)
               .catch((err) => console.log(err))
               this.Music.push(item)
-              console.log(this.Music);
-              /* console.log(this.Music[0].graph); */
-              /* for (i in this.Music) {
-                console.log(i.graph);
-              } */
+              
         })
         })
 

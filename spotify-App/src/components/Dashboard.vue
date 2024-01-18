@@ -13,15 +13,12 @@ export default{
     data() {
         return {
             userStore:useUserStore(),
-            /* genresData: [],
-            chartInstance: null, */
             dialog: false,
             music: null,
         }
     },  
 
     created () {
-        /* console.log('first') */
         this.userStore.isLogged = true
     },
     
@@ -31,54 +28,10 @@ export default{
         const code = urlObject.searchParams.get('code');
         
         setInterval(this.userStore.getUserInfo(code),3600000)
-        /* this.getProfile(String(this.token)) */
-        console.log(this.userStore.isLogged)
 
-        //Graph Genres
-        /* setTimeout(() => {
-            this.fetchTopGenres();
-        }, 0); */
     },
     methods: {
-        //Graph Genres
-        /* fetchTopGenres() {
-            const genres = this.userStore.TopArtists.map(item => item.genres).flat();
-
-            const genreCounts = genres.reduce((counts, genre) => {
-                counts[genre] = (counts[genre] || 0) + 1;
-                return counts;
-            }, {});
-
-            this.genresData = Object.entries(genreCounts).map(([label, value]) => ({
-                label,
-                value,
-            }));
-
-            const chartOptions = {
-                type: 'doughnut', // Change the chart type if needed
-                data: {
-                labels: this.genresData.map(data => data.label),
-                datasets: [
-                    {
-                    data: this.genresData.map(data => data.value),
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(54, 162, 235, 0.6)',
-                        'rgba(255, 206, 86, 0.6)',
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(153, 102, 255, 0.6)',
-                    ],
-                    },
-                ],
-                },
-                options: {
-                    responsive: false, 
-                    width: 200, 
-                    height: 200, 
-                },
-            };
-            this.chartInstance = new Chart(this.$refs.myChart, chartOptions);
-            }, */
+        
 
             openModal(music) {
                 this.music = music;
@@ -133,7 +86,6 @@ export default{
                 <v-card style="width: 180px;height: 200px;">
                     <v-img :src=artist.images[0].url style="width: 200px;height: 150px;"></v-img>
                     <v-card-title>{{ artist.name }}</v-card-title>
-                    <!-- <v-card-text style="font-size: small;">{{ artist.genres }}</v-card-text> -->
                 </v-card>
             </v-col>
         </v-row><br>
@@ -151,32 +103,17 @@ export default{
                     <a :href="music.uri" style="padding: 10px;">
                             <v-btn elevation="2" outlined>LISTEN</v-btn>
                     </a>
-                            <!-- <v-btn @click="openModal">Open Modal</v-btn>
-                            <v-dialog v-model="dialog" width="600px">
-                                <v-card>
-                                <v-card-title>
-                                    <span class="text-h5">{{ music ? music.name : '' }}</span>
-                                    <v-card-text>{{ console.log(music) }}</v-card-text>
-                                </v-card-title>
-                                <v-card-text style="font-size: medium;">{{ music ? music.graph : '' }}</v-card-text>
-                                <v-container>
-                                </v-container>
-                                <v-card-actions>
-                                    <v-btn color="green darken-1" text @click="closeModal">Close</v-btn>
-                                </v-card-actions>
-                                </v-card>
-                            </v-dialog>-->
-                    </v-card>
+                                                </v-card>
                 </v-col>
         </v-row><br>
         <h2>Most Heard Genres</h2>
         <v-container v-if="userStore.isLogged && userStore.userData.images && userStore.userData.images.length > 0">
             <GraphGenre/>
         </v-container>
-        <!-- <canvas ref="myChart"></canvas><br> -->
         </v-container>
 </template>
 
 <style>
 
 </style>
+ 
