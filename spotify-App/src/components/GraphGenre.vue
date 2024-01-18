@@ -1,6 +1,16 @@
 <template>
-  <canvas ref="myChart"></canvas><br>
+  <div>
+    <canvas  ref="myChart"></canvas><br>
+  </div>
 </template>
+
+<style lang="css" scoped>
+canvas{
+  width: 300px;
+  height: 750px;
+}
+</style>
+
 
 <script>
 import { useUserStore } from '../stores/userStore';
@@ -12,17 +22,24 @@ export default {
       genresData: [],
       userStore: useUserStore(),
       chartInstance: null,
+      show:false
     };
   },
 
-  mounted() {
-    setTimeout(() => {
-      this.fetchTopGenres();
-    }, 0);
-  },
-
+  mounted () {  
+   /*  this.$nextTick(() => {
+      setTimeout(() => {
+    */     
+   if(this.userStore.TopArtists.length > 0){
+    console.log('entra')
+     this.fetchTopGenres();
+    }
+      /* }, 0); */
+  }, 
+/* },  */
+  
   methods: {
-    fetchTopGenres() {
+     fetchTopGenres() {
       const genres = this.userStore.TopArtists.map(item => item.genres).flat();
 
       const genreCounts = genres.reduce((counts, genre) => {
@@ -59,16 +76,10 @@ export default {
         },
       };
 
-      this.chartInstance = new Chart(this.$refs.myChart, chartOptions);
+      this.chartInstance =  new Chart(this.$refs.myChart, chartOptions);
+      this.$forceUpdate()
+
     },
   },
 };
 </script>
-
-<style lang="css" scoped>
-canvas{
-  width: 300px;
-  height: 750px;
-}
-</style>
-

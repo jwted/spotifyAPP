@@ -7,6 +7,7 @@ export const useUserStore = defineStore('user', {
     TopArtists:[],
     TopMusics:[],
     isLogged:false,
+    token:'',
     CLIENT_ID:"648fdde9ee8d43df83b827613921ea7e" ,
     CLIENT_SECRET:"21d216171a434a829cd378d951ac5e38",
     REDIRECT_URL_LOGIN:"http://localhost:5173/home",
@@ -98,7 +99,6 @@ export const useUserStore = defineStore('user', {
 
       logout() {
         this.$reset()
-        console.log('Sai')
       }
     },
     methods: {
