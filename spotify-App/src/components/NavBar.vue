@@ -3,7 +3,7 @@
     <v-card>
       <v-layout>
         <v-navigation-drawer
-          style="background-color: #191414;box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);"
+          style="background-color: #191414;box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);position: fixed;"
         >
           <v-list>
             <v-list-item>
@@ -27,20 +27,11 @@
             
           
           <v-list density="compact" nav>
-            <!-- <v-list-item
-              prepend-avatar="https://upload.wikimedia.org/wikipedia/commons/5/59/User-avatar.svg"
-              title="User"
-              style="color:#FFF;font-size: 24px;font-style: normal;font-weight: 500;"
-            ></v-list-item> -->
             
-            <!-- <v-list-item>
-              <img src={{ this.userData. }}>
-            </v-list-item>
-             -->
             <v-list-item>
               <v-list-item-action style="justify-content: center;">
                 <Login/>
-                <p style="color:">{{userStore.isLogged}}</p>
+                
               </v-list-item-action>
             </v-list-item>
             
@@ -59,7 +50,7 @@
           </v-list>
         </v-navigation-drawer>
   
-        <v-main style="height: 200vh"></v-main>
+        <v-main style="height: 200vh; width: 100px"></v-main>
       </v-layout>
     </v-card>
   </v-app>
