@@ -11,6 +11,7 @@ export const useUserStore = defineStore('user', {
     CLIENT_SECRET:"21d216171a434a829cd378d951ac5e38",
     REDIRECT_URL_LOGIN:"http://localhost:5173/home",
     REDIRECT_URL_LOGIN_ENCODED:"http%3A%2F%2Flocalhost%3A5173%2Fhome%2F",
+    Music:[]
 
   }),
   getters: {
@@ -66,15 +67,43 @@ export const useUserStore = defineStore('user', {
           .then((response) => this.TopMusics = (response.data.items))
           .catch((err) => console.log(err));
         this.TopMusics = this.TopMusics.slice(0, 6)
-      },
+ 
 
+        //Test Music Details
+        await axios.get("https://api.spotify.com/v1/me/top/tracks?limit=6&offset=0", {
+          headers: {
+            'Authorization': 'Bearer ' + this.token
+          }
+        })
+        .then((response) => {
+            return response.data.items.map(async item => {
+              item.graph = await axios.get(`https://api.spotify.com/v1/audio-features/${item.id}`, {
+                headers: {
+                  'Authorization': 'Bearer ' + this.token
+                }
+              })
+              .then((response) => response.data)
+              .catch((err) => console.log(err))
+              this.Music.push(item)
+              console.log(this.Music);
+              /* console.log(this.Music[0].graph); */
+              /* for (i in this.Music) {
+                console.log(i.graph);
+              } */
+        })
+        })
+
+
+        },
 
       logout() {
         this.$reset()
-        console.log('sai fdp')
+        console.log('Sai')
       }
     },
     methods: {
-
+      getId(id){
+        return id
+      }
     },
   });

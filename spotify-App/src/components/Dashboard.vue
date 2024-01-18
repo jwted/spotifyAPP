@@ -2,17 +2,21 @@
 import {useUserStore} from '../stores/userStore.js'
 import Chart from 'chart.js/auto';
 import GraphGenre from "@/components/GraphGenre.vue"
+import GraphMusic from "@/components/GraphMusic.vue"
 
 export default{
     components: {
         GraphGenre,
+        GraphMusic
     },
 
     data() {
         return {
             userStore:useUserStore(),
-            genresData: [],
-            chartInstance: null,
+            /* genresData: [],
+            chartInstance: null, */
+            dialog: false,
+            music: null,
         }
     },  
 
@@ -75,10 +79,16 @@ export default{
             };
             this.chartInstance = new Chart(this.$refs.myChart, chartOptions);
             }, */
+
+            openModal(music) {
+                this.music = music;
+                this.dialog = true;
+            },
+            closeModal() {
+                this.dialog = false;
+            },
     },
 }
-
-
 </script>
 
 <template>
@@ -86,26 +96,35 @@ export default{
         <!-- User -->
         <h1>My stats</h1><br>
         <v-row>
-            <v-col style="width: 100px;">
+            <v-col style="width: 10px">
+                <!-- URL -->
+                <v-card style="width: 200px; height: 90px;">
+                    <v-card-title>My Account</v-card-title>
+                    <a :href="this.userStore.userData.uri" style="padding: 10px;">
+                        <v-btn elevation="2" outlined>Go</v-btn>
+                    </a>
+                </v-card>
+            </v-col>
+            <v-col style="width: 10px;">
                 <!-- Followers -->
                 <v-card style="width: 200px; height: 90px;">
                     <v-card-title>Followers</v-card-title>
                     <v-card-text style="font-size: small;">{{ this.userStore.userData.followers.total }}</v-card-text>
                 </v-card>
             </v-col>
-            <v-col>
+            <v-col style="width: 10px">
                 <!-- Language -->
                 <v-card style="width: 200px; height: 90px;">
                     <v-card-title>Language</v-card-title>
                     <v-card-text style="font-size: small;">{{ this.userStore.userData.country }}</v-card-text>
                 </v-card>
             </v-col>
-            <v-col>
-                <!-- Total artits followed (tem de ser artista) -->
-                <!-- <v-card>
-                    <v-card-title>Total of followed artists</v-card-title>
-                    <v-card-text>{{ this.userStore.userDataFollowing.items[0].followers[0].total }}</v-card-text>
-                </v-card> -->
+            <v-col style="width: 10px">
+                <!-- Type -->
+                <v-card style="width: 200px; height: 90px;">
+                    <v-card-title>Subscription</v-card-title>
+                    <v-card-text style="font-size: small;">{{ this.userStore.userData.product }}</v-card-text>
+                </v-card>
             </v-col>
         </v-row><br>
         <h2>Top Artists</h2>
@@ -120,25 +139,42 @@ export default{
         </v-row><br>
         <h2>Top Music</h2>
         <v-row rows="6">
-            <v-col v-for="music in this.userStore.TopMusics" cols="4">
-                <v-card style="width: 300px; height: 270px;">
-                    <!-- <v-img :src=music.images.url style="width: 200px;height: 150px;"></v-img> -->
+            <v-col v-for="music in this.userStore.Music" cols="6">
+                <v-card style="width: 400px; height: 600px;">
                     <v-card-title style="font-size: medium;">{{ music.name }}</v-card-title>
-                    <v-card-text style="font-size: small;">Artist : {{ music.artists[0].name }}</v-card-text>
-                    <v-card-text style="font-size: small;">Popularity : {{ music.popularity }}</v-card-text>
-                    <v-card-text style="font-size: small;">Duration : {{ music.duration_ms }}ms</v-card-text>
+                    <v-card-text style="font-size: medium;">Artist : {{ music.artists[0].name }}</v-card-text>
+                    <v-card-text style="font-size: medium;">Popularity : {{ music.popularity }} (0-100)</v-card-text>
+                    <v-card-text style="font-size: medium;">Duration : {{ music.duration_ms }}ms</v-card-text>
+                    <v-card-text style="font-size: medium;">Details :</v-card-text>
+                    <GraphMusic :musicInfo="music.graph" />
+                    
                     <a :href="music.uri" style="padding: 10px;">
-                        <v-btn elevation="2" outlined>LISTEN</v-btn>
+                            <v-btn elevation="2" outlined>LISTEN</v-btn>
                     </a>
-                </v-card>
-            </v-col>
+                            <!-- <v-btn @click="openModal">Open Modal</v-btn>
+                            <v-dialog v-model="dialog" width="600px">
+                                <v-card>
+                                <v-card-title>
+                                    <span class="text-h5">{{ music ? music.name : '' }}</span>
+                                    <v-card-text>{{ console.log(music) }}</v-card-text>
+                                </v-card-title>
+                                <v-card-text style="font-size: medium;">{{ music ? music.graph : '' }}</v-card-text>
+                                <v-container>
+                                </v-container>
+                                <v-card-actions>
+                                    <v-btn color="green darken-1" text @click="closeModal">Close</v-btn>
+                                </v-card-actions>
+                                </v-card>
+                            </v-dialog>-->
+                    </v-card>
+                </v-col>
         </v-row><br>
-        <h3>Top Genres</h3>
+        <h2>Most Heard Genres</h2>
         <v-container v-if="userStore.isLogged && userStore.userData.images && userStore.userData.images.length > 0">
             <GraphGenre/>
         </v-container>
         <!-- <canvas ref="myChart"></canvas><br> -->
-    </v-container>
+        </v-container>
 </template>
 
 <style>

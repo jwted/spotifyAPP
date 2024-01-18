@@ -25,20 +25,18 @@ export default {
     fetchTopGenres() {
       const genres = this.userStore.TopArtists.map(item => item.genres).flat();
 
-      // Count the occurrences of each genre
       const genreCounts = genres.reduce((counts, genre) => {
         counts[genre] = (counts[genre] || 0) + 1;
         return counts;
       }, {});
 
-      // Convert the counts to an array of objects
       this.genresData = Object.entries(genreCounts).map(([label, value]) => ({
         label,
         value,
       }));
 
       const chartOptions = {
-        type: 'doughnut', // Change the chart type if needed
+        type: 'doughnut', 
         data: {
           labels: this.genresData.map(data => data.label),
           datasets: [
